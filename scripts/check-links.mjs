@@ -19,8 +19,12 @@ let checked = 0
 
 for (const page of pages) {
   const html = readFileSync(page, 'utf8')
-  const hrefs = [...html.matchAll(/href="([^"]+)"/g)].map((m) => m[1])
-  for (const href of hrefs) {
+  // 同时检查 href 与 src：图片路径写错时 href 检查是发现不了的
+  const refs = [
+    ...[...html.matchAll(/href="([^"]+)"/g)].map((m) => m[1]),
+    ...[...html.matchAll(/<img[^>]+src="([^"]+)"/g)].map((m) => m[1])
+  ]
+  for (const href of refs) {
     if (/^(https?:|mailto:|#|data:)/.test(href)) continue
     const clean = href.split('#')[0].split('?')[0]
     if (!clean) continue

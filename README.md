@@ -67,7 +67,8 @@ git push
 │  │     ├─ index.ts            # 主题入口
 │  │     └─ custom.css          # 自定义样式（换主题色改这里）
 │  ├─ public/                   # 静态资源，按原样拷贝
-│  │  ├─ logo.svg
+│  │  ├─ logo-light.jpg         # 浅色模式标志（黑字）
+│  │  ├─ logo-dark.jpg          # 深色模式标志（白字）
 │  │  └─ favicon.svg
 │  ├─ posts/                    # 文章目录
 │  │  ├─ index.md               # 文章归档页
@@ -86,6 +87,11 @@ git push
 ## 一些说明
 
 - **图片**放在 `docs/public/` 下，引用时写 `/图片名.png`。
+- **标志分日间/夜间两张**：`logo-light.jpg`（黑字，浅色模式）和
+  `logo-dark.jpg`（白字，深色模式）。VitePress 1.6 没有内置的 `logoDark`，
+  所以由 `custom.css` 里两条 `.dark ... { content: url('/logo-dark.jpg') }`
+  按主题替换导航栏和首页头图。换标志时**两个文件一起换**，尺寸建议 640×640
+  （头图最大显示 320px，640 刚好覆盖 2 倍屏，再大只是浪费流量）。
 - **站内链接**不要带 `.md` 后缀，写成 `/posts/hello-world`；从首页这类同目录文件
   跳转时相对路径 `./posts/hello-world` 也可以。
 - **改主题色**：编辑 `docs/.vitepress/theme/custom.css` 里的 `--vp-c-brand-*` 变量。

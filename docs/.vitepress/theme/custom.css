@@ -79,13 +79,27 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* 头图（PBLK Puzzle）：白底方图，用圆角和阴影让它看起来是有意为之 */
+/* 头图（Oblivisera 标志）：方案是一张日间图 + 一张夜间图，
+   这里用 CSS 按当前主题替换图片本身。
+   VitePress 1.6 的 themeConfig 只有 logo / hero.image.src，没有 logoDark，
+   所以用 content: url(...) 覆盖 <img> 的图片源。
+   改标志时替换 public/logo-light.jpg 与 public/logo-dark.jpg 即可。 */
 .VPHomeHero .image-src {
   border-radius: 16px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
 }
 
+.dark .VPHomeHero .image-src {
+  content: url('/logo-dark.jpg');
+  /* 夜间图自带深色底，阴影改成浅色微光更自然 */
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
 /* 导航栏 logo 同理，小尺寸下圆角要小一点 */
 .VPNavBarTitle .VPImage.logo {
   border-radius: 6px;
+}
+
+.dark .VPNavBarTitle .VPImage.logo {
+  content: url('/logo-dark.jpg');
 }

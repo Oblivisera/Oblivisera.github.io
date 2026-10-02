@@ -6,7 +6,7 @@ hero:
   text: Hi, Welcome to my Lab!
   tagline: 待到惊雷破晓时，梨花已然满城飞
   image:
-    src: /logo.jpg
+    src: /logo-light.jpg
     alt: Oblivisera
   actions:
     - theme: brand

@@ -29,7 +29,9 @@ export default defineConfig({
   ],
 
   themeConfig: {
-    logo: '/logo.jpg',
+    // 浅色模式用黑字标志；深色模式由 custom.css 换成白字版本
+    // （VitePress 1.6 没有内置 logoDark，所以用 CSS 切换）
+    logo: '/logo-light.jpg',
 
     // 顶部导航
     nav: [
