@@ -47,9 +47,7 @@ export default defineConfig({
           text: '文章',
           items: [
             { text: '文章归档', link: '/posts/' },
-            { text: '你好，世界', link: '/posts/hello-world' },
-            { text: '用 VitePress 搭建博客', link: '/posts/build-blog-with-vitepress' },
-            { text: 'Markdown 写作速查', link: '/posts/markdown-cheatsheet' }
+            { text: '你好，世界', link: '/posts/hello-world' }
           ]
         }
       ]

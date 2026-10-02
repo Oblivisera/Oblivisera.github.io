@@ -106,3 +106,42 @@
 .dark .VPNavBarTitle .VPImage.logo {
   content: url('/logo-dark.jpg');
 }
+
+/* ---- 底部导航：去掉「上一篇 / 下一篇」，统一换成「回到文章归档」 ---- */
+
+/* display:none 会一并从无障碍树里移除，屏幕阅读器也不会再念到它，
+   所以这里不是「藏起来」，而是等价于删掉。
+   隐藏而不是改 frontmatter，是为了以后新增文章自动生效。 */
+.VPDocFooter .prev-next {
+  display: none;
+}
+
+.archive-back {
+  margin: 0 0 20px;
+}
+
+.archive-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--vp-c-text-1);
+  text-decoration: none;
+  transition: border-color 0.25s, color 0.25s, background-color 0.25s;
+}
+
+.archive-back-link:hover {
+  border-color: var(--vp-c-brand-1);
+  color: var(--vp-c-brand-1);
+  background-color: var(--vp-c-brand-soft);
+}
+
+.archive-back-arrow {
+  /* 箭头跟随文字颜色，hover 时一起变品牌色 */
+  font-size: 15px;
+  line-height: 1;
+}
