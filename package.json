@@ -9,7 +9,9 @@
     "build": "vitepress build docs",
     "preview": "vitepress preview docs",
     "new": "node scripts/new-post.mjs",
-    "check:links": "node scripts/check-links.mjs"
+    "check:links": "node scripts/check-links.mjs",
+    "check:search": "node scripts/check-search.mjs",
+    "verify": "npm run build && npm run check:links && npm run check:search"
   },
   "devDependencies": {
     "vitepress": "^1.6.4"

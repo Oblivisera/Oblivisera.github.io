@@ -20,6 +20,8 @@ npm run dev       # 本地开发，浏览器打开 http://localhost:5173
 | `npm run preview` | 本地预览构建结果（上线前的最终检查） |
 | `npm run new "标题"` | 新建一篇文章，自动生成 frontmatter |
 | `npm run check:links` | 检查构建产物里有没有失效的站内链接 |
+| `npm run check:search` | 验证中文搜索可用、且无无关结果 |
+| `npm run verify` | 构建 + 上面两项检查，一条命令跑完 |
 
 ## 写一篇新文章
 
@@ -70,7 +72,8 @@ git push
 │  └─ about.md                  # 关于页
 ├─ scripts/
 │  ├─ new-post.mjs              # 新建文章脚本
-│  └─ check-links.mjs           # 链接自检脚本
+│  ├─ check-links.mjs           # 站内链接自检
+│  └─ check-search.mjs          # 中文搜索自检
 ├─ .github/workflows/deploy.yml # 自动部署配置
 └─ package.json
 ```
@@ -82,6 +85,12 @@ git push
   跳转时相对路径 `./posts/hello-world` 也可以。
 - **改主题色**：编辑 `docs/.vitepress/theme/custom.css` 里的 `--vp-c-brand-*` 变量。
 - **搜索**是本地索引，构建时自动生成，不需要任何第三方服务。
+  中文分词用的是二元切分（bigram），配置在 `config.mts` 的
+  `search.options.miniSearch.options.tokenize`。
+  > 为什么不用 `Intl.Segmenter`：它会把「博客」拆成「博」「客」两个单字，
+  > 导致搜索结果又杂又不准。二元切分不需要词典，召回和精度都更稳。
+- **frontmatter 不会被索引**。首页那些 `features` 写在 frontmatter 里，
+  所以搜不到；想让它可被搜索，需要写进正文。
 - **`base` 路径**在 `config.mts` 中为 `'/'`。仓库名是 `Oblivisera.github.io`
   时保持不动；若改成别的仓库名，需改为 `'/<仓库名>/'`。
 

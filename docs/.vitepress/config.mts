@@ -57,6 +57,48 @@ export default defineConfig({
     search: {
       provider: 'local',
       options: {
+        miniSearch: {
+          options: {
+            // MiniSearch 默认只按空格和标点切词，中文整段会变成一个词条，
+            // 搜索「博客」匹配不到「为什么还要写博客」。
+            //
+            // 这里改用「二元分词」（bigram）：把连续中文切成相邻两字的组合，
+            // 例如「本地全文搜索」-> 本地|地全|全文|文搜|搜索。
+            // 这是 CJK 全文检索的经典做法，不需要词典，
+            // 比 Intl.Segmenter 可靠（后者会把「博客」拆成「博」「客」）。
+            // 英文与数字保持整词，不做拆分。
+            //
+            // 注意：该函数会被 VitePress 序列化后送到浏览器执行，
+            // 因此函数体必须自包含，不能引用任何外部变量。
+            tokenize: (text: string) => {
+              const out: string[] = []
+              const re = /[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]+|[A-Za-z0-9_]+/g
+              let m: RegExpExecArray | null
+              while ((m = re.exec(text)) !== null) {
+                const s = m[0]
+                if (/^[A-Za-z0-9_]+$/.test(s)) {
+                  // 拉丁词/数字：整词保留
+                  out.push(s)
+                } else if (s.length === 1) {
+                  // 单个汉字，无法组二元组
+                  out.push(s)
+                } else {
+                  // 连续汉字：切成长度为 2 的重叠窗口
+                  for (let k = 0; k < s.length - 1; k++) {
+                    out.push(s.slice(k, k + 2))
+                  }
+                }
+              }
+              return out
+            }
+          },
+          searchOptions: {
+            // 二元分词后，模糊匹配会引入大量无关结果，这里关掉
+            fuzzy: false,
+            prefix: true,
+            boost: { title: 4, text: 2, titles: 1 }
+          }
+        },
         translations: {
           button: {
             buttonText: '搜索文章',
