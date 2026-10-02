@@ -1,0 +1,26 @@
+# 统一换行符，避免 Windows 本地与 Linux 构建机之间产生无意义的整文件 diff
+* text=auto eol=lf
+
+# 明确按文本处理
+*.md   text
+*.mts  text
+*.ts   text
+*.css  text
+*.json text
+*.yml  text
+*.mjs  text
+*.svg  text
+
+# 二进制文件不做转换
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.webp binary
+*.ico  binary
+*.woff binary
+*.woff2 binary
+
+# 让 GitHub 正确识别语言统计
+package-lock.json linguist-generated=true
+docs/.vitepress/dist/** linguist-generated=true

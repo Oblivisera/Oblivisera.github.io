@@ -1,0 +1,17 @@
+{
+  "name": "oblivisera-blog",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Oblivisera 的个人博客，基于 VitePress 构建",
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs",
+    "new": "node scripts/new-post.mjs",
+    "check:links": "node scripts/check-links.mjs"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.4"
+  }
+}

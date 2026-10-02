@@ -1,0 +1,79 @@
+/**
+ * 自定义样式：调整品牌色与文章排版
+ * 想换主题色，改下面这组 --vp-c-brand-* 变量即可
+ */
+
+:root {
+  --vp-c-brand-1: #3451b2;
+  --vp-c-brand-2: #3a5ccc;
+  --vp-c-brand-3: #5672cd;
+  --vp-c-brand-soft: rgba(100, 108, 255, 0.14);
+
+  /* 首页主标题渐变 */
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(120deg, #3451b2 30%, #5b7cfa);
+
+  --vp-home-hero-image-background-image: linear-gradient(-45deg, #3451b2 50%, #8fa6ff 50%);
+  --vp-home-hero-image-filter: blur(44px);
+}
+
+.dark {
+  --vp-c-brand-1: #a8b1ff;
+  --vp-c-brand-2: #8f9cff;
+  --vp-c-brand-3: #6b7cff;
+  --vp-c-brand-soft: rgba(100, 108, 255, 0.16);
+}
+
+/* 文章正文排版：中英文混排更舒服 */
+.vp-doc {
+  line-height: 1.75;
+}
+
+.vp-doc h2 {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+}
+
+.vp-doc p,
+.vp-doc li {
+  /* 中文字符与拉丁字母之间留出一点呼吸感 */
+  text-spacing-trim: space-all;
+}
+
+.vp-doc img {
+  border-radius: 8px;
+}
+
+/* 行内代码稍微柔和一点 */
+.vp-doc :not(pre) > code {
+  background-color: var(--vp-c-default-soft);
+  color: var(--vp-c-text-1);
+}
+
+/* 首页特性卡片加一点悬浮反馈 */
+.VPFeature {
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.VPFeature:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* 文章列表样式（配合 .post-list 使用） */
+.post-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.post-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+.post-list .post-date {
+  color: var(--vp-c-text-3);
+  font-size: 0.85rem;
+  margin-right: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
