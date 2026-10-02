@@ -83,25 +83,34 @@ console.log(
     : `\n结论: ${failures} 项异常`
 )
 
-// ---- 3. 底部翻页 ----
-// 文章页必须有自定义翻页（Layout.vue 的 doc-after 插槽），
-// 归档页/关于页/首页不能有，否则会出现「在归档页上点回归档」这种自指链接。
-console.log('\n=== 底部翻页 ===')
+// ---- 3. 底部导航 ----
+// 规则：文章页显示「上一篇/下一篇」；归档页、关于页等独立正文页显示「返回首页」；
+// 首页与 404 两者都不显示。
+console.log('\n=== 底部导航 ===')
 for (const f of htmlFiles) {
   const html = readFileSync(f, 'utf8')
-  // 去掉查询串，统一成 dist 内的相对路径
   const rel = relative(dist, f).replace(/\\/g, '/')
   const isPost = rel.startsWith('posts/') && rel !== 'posts/index.html'
-  const hasNav = html.includes('class="post-nav"')
+  // 归档页 / 关于页属于「独立正文页」，应给返回首页入口
+  const isStandalone = rel === 'posts/index.html' || rel === 'about.html'
 
-  if (isPost && !hasNav) {
+  const hasPostNav = html.includes('class="post-nav"')
+  const hasHomeBack = html.includes('class="page-back"')
+
+  let problem = ''
+  if (isPost && !hasPostNav) problem = '文章页缺少翻页'
+  else if (isPost && hasHomeBack) problem = '文章页不该出现「返回首页」'
+  else if (isStandalone && !hasHomeBack) problem = '独立页缺少「返回首页」'
+  else if (isStandalone && hasPostNav) problem = '独立页不该出现翻页'
+  else if (!isPost && !isStandalone && (hasPostNav || hasHomeBack))
+    problem = '首页/404 不该出现底部导航'
+
+  if (problem) {
     failures++
-    console.log(`  FAIL    ${rel} 是文章页但没有翻页`)
-  } else if (!isPost && hasNav) {
-    failures++
-    console.log(`  FAIL    ${rel} 不该出现翻页`)
+    console.log(`  FAIL    ${rel}  ${problem}`)
   } else {
-    console.log(`  OK      ${rel}  ${isPost ? '有翻页' : '无翻页（符合预期）'}`)
+    const what = isPost ? '翻页' : isStandalone ? '返回首页' : '无（符合预期）'
+    console.log(`  OK      ${rel}  ${what}`)
   }
 }
 

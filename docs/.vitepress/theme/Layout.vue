@@ -13,10 +13,12 @@ type Post = { text: string; link: string; date: string }
 // 因为链接是「扫出来的」而不是手写的，所以不会指向不存在的文件。
 const posts = computed<Post[]>(() => (theme.value as { posts?: Post[] }).posts ?? [])
 
+const relativePath = computed(() => page.value.relativePath)
+
 // 当前页面在文章列表中的位置；非文章页为 -1
 const index = computed(() =>
   posts.value.findIndex(
-    (p) => p.link === '/' + page.value.relativePath.replace(/\.md$/, '')
+    (p) => p.link === '/' + relativePath.value.replace(/\.md$/, '')
   )
 )
 
@@ -31,13 +33,20 @@ const next = computed(() =>
     ? posts.value[index.value + 1]
     : null
 )
+
+// 独立页面（文章归档、关于等）底部给一个「返回首页」入口。
+// 首页自己的 layout 是 home，不会渲染 VPDoc，因此下方插槽天然不生效；
+// 这里仍显式排除，避免以后改版式时冒出多余按钮。
+const showHomeLink = computed(
+  () => !isPost.value && relativePath.value !== 'index.md'
+)
 </script>
 
 <template>
   <Layout>
     <!--
       doc-after 插槽正好在 VPDocFooter 之后，也就是原来「上一篇/下一篇」的位置。
-      自带的那个已在 custom.css 里隐藏，这里换成带归档兜底的版本。
+      自带的翻页已在 custom.css 里隐藏，这里换成带归档兜底的版本。
     -->
     <template #doc-after>
       <nav v-if="isPost" class="post-nav" aria-label="文章导航">
@@ -68,6 +77,13 @@ const next = computed(() =>
           <span class="post-nav-title">查看全部文章 →</span>
         </a>
       </nav>
+
+      <div v-else-if="showHomeLink" class="page-back">
+        <a class="page-back-link" :href="withBase('/')">
+          <span class="page-back-arrow" aria-hidden="true">←</span>
+          返回首页
+        </a>
+      </div>
     </template>
   </Layout>
 </template>

@@ -179,3 +179,35 @@
     text-align: left;
   }
 }
+
+/* ---- 独立页面（归档、关于）底部的「返回首页」 ---- */
+.page-back {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.page-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 22px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--vp-c-text-1);
+  text-decoration: none;
+  transition: border-color 0.25s, color 0.25s, background-color 0.25s;
+}
+
+.page-back-link:hover {
+  border-color: var(--vp-c-brand-1);
+  color: var(--vp-c-brand-1);
+  background-color: var(--vp-c-brand-soft);
+}
+
+.page-back-arrow {
+  font-size: 15px;
+  line-height: 1;
+}
