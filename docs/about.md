@@ -7,6 +7,7 @@
 ## 关于这个站点
 
 - 使用 [VitePress](https://vitepress.dev) 构建，写作全部用 Markdown
+- 使用Deepseek进行修改与测试
 - 托管在 [GitHub Pages](https://pages.github.com)，源码在
   [GitHub 仓库](https://github.com/Oblivisera/Oblivisera.github.io)
 

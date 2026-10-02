@@ -9,9 +9,12 @@
   --vp-c-brand-3: #5672cd;
   --vp-c-brand-soft: rgba(100, 108, 255, 0.14);
 
-  /* 首页主标题渐变 */
-  --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: linear-gradient(120deg, #3451b2 30%, #5b7cfa);
+  /* 首页主标题：与下方副标题同色。
+     副标题(.text)没有单独设色，继承的是正文色 --vp-c-text-1，
+     所以这里也用同一个变量，两边必然一致，且深色模式会自动跟随。
+     （VitePress 默认是 var(--vp-c-brand-1)，所以原本显示为蓝色） */
+  --vp-home-hero-name-color: var(--vp-c-text-1);
+  --vp-home-hero-name-background: transparent;
 
   /* 头图是白底方图，去掉 VitePress 默认的彩色光晕，避免和白色背景打架 */
   --vp-home-hero-image-background-image: none;

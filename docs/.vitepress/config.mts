@@ -7,7 +7,7 @@ export default defineConfig({
 
   lang: 'zh-CN',
   title: 'Oblivisera',
-  description: 'Oblivisera 的个人博客 —— 记录技术、思考与生活',
+  description: 'Oblivisera 的个人博客',
 
   // 文章目录里常出现中文和空格，链接检查放宽
   markdown: {
@@ -24,7 +24,7 @@ export default defineConfig({
 
   head: [
     ['link', { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }],
-    ['meta', { name: 'theme-color', content: '#3451b2' }],
+    ['meta', { name: 'theme-color', content: '#000000ff' }],
     ['meta', { name: 'author', content: 'Oblivisera' }]
   ],
 
@@ -147,7 +147,7 @@ export default defineConfig({
     // 页脚
     footer: {
       message: '基于 VitePress 构建 · 部署于 GitHub Pages',
-      copyright: 'Copyright © 2024-present Oblivisera'
+      copyright: 'Copyright © 2026 Oblivisera'
     },
 
     socialLinks: [
