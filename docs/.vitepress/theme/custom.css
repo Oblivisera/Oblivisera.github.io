@@ -107,41 +107,75 @@
   content: url('/logo-dark.jpg');
 }
 
-/* ---- 底部导航：去掉「上一篇 / 下一篇」，统一换成「回到文章归档」 ---- */
+/* ---- 底部导航：自带的上一篇/下一篇已由 Layout.vue 替换 ---- */
 
-/* display:none 会一并从无障碍树里移除，屏幕阅读器也不会再念到它，
-   所以这里不是「藏起来」，而是等价于删掉。
-   隐藏而不是改 frontmatter，是为了以后新增文章自动生效。 */
+/* 隐藏 VitePress 自带的翻页。display:none 会一并从无障碍树移除，
+   屏幕阅读器不会念到，等价于删掉；
+   不直接改 frontmatter，是为了新增文章时自动生效。 */
 .VPDocFooter .prev-next {
   display: none;
 }
 
-.archive-back {
-  margin: 0 0 20px;
+/* 自定义翻页：左「上一篇」右「下一篇」，最后一篇时右侧变成归档入口 */
+.post-nav {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
 }
 
-.archive-back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
+.post-nav-spacer {
+  flex: 1;
+}
+
+.post-nav-link {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px;
   border: 1px solid var(--vp-c-divider);
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--vp-c-text-1);
+  border-radius: 8px;
   text-decoration: none;
-  transition: border-color 0.25s, color 0.25s, background-color 0.25s;
+  transition: border-color 0.25s, background-color 0.25s;
 }
 
-.archive-back-link:hover {
+.post-nav-link:hover {
   border-color: var(--vp-c-brand-1);
-  color: var(--vp-c-brand-1);
   background-color: var(--vp-c-brand-soft);
 }
 
-.archive-back-arrow {
-  /* 箭头跟随文字颜色，hover 时一起变品牌色 */
-  font-size: 15px;
-  line-height: 1;
+.post-nav-link.next {
+  text-align: right;
+}
+
+.post-nav-desc {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--vp-c-text-3);
+}
+
+.post-nav-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--vp-c-brand-1);
+  line-height: 1.4;
+}
+
+/* 归档兜底项用中性色，和真正的「下一篇」区分开 */
+.post-nav-link.archive {
+  border-style: dashed;
+}
+
+.post-nav-link.archive .post-nav-title {
+  color: var(--vp-c-text-1);
+}
+
+@media (max-width: 640px) {
+  .post-nav {
+    flex-direction: column;
+  }
+
+  .post-nav-link.next {
+    text-align: left;
+  }
 }

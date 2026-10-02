@@ -1,4 +1,59 @@
 import { defineConfig } from 'vitepress'
+import { readdirSync, readFileSync, existsSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+// ── 文章列表 ─────────────────────────────────────────────────────────
+// 直接扫描 docs/posts 目录生成，侧边栏和「上一篇/下一篇」共用这一份数据。
+// 这样删掉一篇文章后，侧边栏和翻页会自动跟着消失，
+// 不会留下指向已删除文件的死链（之前踩过这个坑）。
+const postsDir = resolve(dirname(fileURLToPath(import.meta.url)), '../posts')
+
+type Post = { text: string; link: string; date: string }
+
+function loadPosts(): Post[] {
+  if (!existsSync(postsDir)) return []
+
+  return readdirSync(postsDir)
+    .filter((f) => f.endsWith('.md') && f !== 'index.md') // index.md 是归档页，不是文章
+    .map((file) => {
+      // 去掉 UTF-8 BOM：Windows 记事本、PowerShell 的 Set-Content 都可能写入 BOM，
+      // 留着的话文件开头变成 "\ufeff---"，frontmatter 正则匹配不上，
+      // 标题和日期会静默失效。
+      const raw = readFileSync(resolve(postsDir, file), 'utf8').replace(/^\uFEFF/, '')
+      const fmMatch = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)
+      const fm = fmMatch ? fmMatch[1] : ''
+      const pick = (key: string): string => {
+        const m = fm.match(new RegExp('^' + key + ':\\s*(.+)$', 'm'))
+        return m ? m[1].trim().replace(/^["']|["']$/g, '') : ''
+      }
+      const slug = file.replace(/\.md$/, '')
+      const title = pick('title')
+      const date = pick('date')
+
+      if (!fmMatch) {
+        console.warn(`[posts] ${file} 没有解析到 frontmatter，标题与日期将退回默认值`)
+      } else if (Number.isNaN(Date.parse(date))) {
+        console.warn(`[posts] ${file} 的 date 缺失或无法解析（当前值: "${date}"），将排到最后`)
+      }
+
+      return {
+        text: title || slug, // 没写 title 就退回文件名
+        link: `/posts/${slug}`,
+        date
+      }
+    })
+    .sort((a, b) => {
+      const ta = Date.parse(a.date)
+      const tb = Date.parse(b.date)
+      const va = Number.isNaN(ta) ? 0 : ta
+      const vb = Number.isNaN(tb) ? 0 : tb
+      if (va !== vb) return vb - va // 新的排在前面
+      return a.link.localeCompare(b.link) // 日期相同则按链接排序，保证结果稳定
+    })
+}
+
+const posts = loadPosts()
 
 export default defineConfig({
   // 用户主页仓库发布在根路径，因此 base 保持 '/'
@@ -40,18 +95,21 @@ export default defineConfig({
       { text: '关于', link: '/about' }
     ],
 
-    // 左侧/右侧目录结构
+    // 左侧/右侧目录结构（文章部分由 docs/posts 目录自动生成）
     sidebar: {
       '/posts/': [
         {
           text: '文章',
           items: [
             { text: '文章归档', link: '/posts/' },
-            { text: '你好，世界', link: '/posts/hello-world' }
+            ...posts.map((p) => ({ text: p.text, link: p.link }))
           ]
         }
       ]
     },
+
+    // 供 Layout.vue 计算「上一篇/下一篇」（themeConfig 会下发到浏览器）
+    posts,
 
     // 本地全文搜索，无需任何第三方服务
     search: {

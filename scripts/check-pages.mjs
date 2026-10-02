@@ -82,4 +82,32 @@ console.log(
     ? '\n结论: 暗色模式与最后更新均正常'
     : `\n结论: ${failures} 项异常`
 )
+
+// ---- 3. 底部翻页 ----
+// 文章页必须有自定义翻页（Layout.vue 的 doc-after 插槽），
+// 归档页/关于页/首页不能有，否则会出现「在归档页上点回归档」这种自指链接。
+console.log('\n=== 底部翻页 ===')
+for (const f of htmlFiles) {
+  const html = readFileSync(f, 'utf8')
+  // 去掉查询串，统一成 dist 内的相对路径
+  const rel = relative(dist, f).replace(/\\/g, '/')
+  const isPost = rel.startsWith('posts/') && rel !== 'posts/index.html'
+  const hasNav = html.includes('class="post-nav"')
+
+  if (isPost && !hasNav) {
+    failures++
+    console.log(`  FAIL    ${rel} 是文章页但没有翻页`)
+  } else if (!isPost && hasNav) {
+    failures++
+    console.log(`  FAIL    ${rel} 不该出现翻页`)
+  } else {
+    console.log(`  OK      ${rel}  ${isPost ? '有翻页' : '无翻页（符合预期）'}`)
+  }
+}
+
+console.log(
+  failures === 0
+    ? '\n结论: 页面检查全部通过'
+    : `\n结论: ${failures} 项异常`
+)
 process.exit(failures === 0 ? 0 : 1)
