@@ -18,17 +18,11 @@ hero:
 
 features:
   - icon: ✍️
-    title: none
-    details: none
+    title: 请输入文本
+    details: 请输入文本
   - icon: ⚡
-    title: none
-    details: none
-  - icon: 🔍
-    title: none
-    details: none
-  - icon: 🌗
-    title: none
-    details: none
+    title: 请输入文本
+    details: 请输入文本
 ---
 
 ## 最近在写
