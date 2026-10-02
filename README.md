@@ -21,7 +21,11 @@ npm run dev       # 本地开发，浏览器打开 http://localhost:5173
 | `npm run new "标题"` | 新建一篇文章，自动生成 frontmatter |
 | `npm run check:links` | 检查构建产物里有没有失效的站内链接 |
 | `npm run check:search` | 验证中文搜索可用、且无无关结果 |
-| `npm run verify` | 构建 + 上面两项检查，一条命令跑完 |
+| `npm run check:pages` | 验证暗色模式与「最后更新」时间正常 |
+| `npm run verify` | 构建 + 上面三项检查，一条命令跑完 |
+
+> `npm run verify` 也是 CI 里实际执行的命令：任何一项检查不过，
+> 部署就会中止，不会把坏掉的站点发上线。
 
 ## 写一篇新文章
 
@@ -73,7 +77,8 @@ git push
 ├─ scripts/
 │  ├─ new-post.mjs              # 新建文章脚本
 │  ├─ check-links.mjs           # 站内链接自检
-│  └─ check-search.mjs          # 中文搜索自检
+│  ├─ check-search.mjs          # 中文搜索自检
+│  └─ check-pages.mjs           # 暗色模式 / 更新时间自检
 ├─ .github/workflows/deploy.yml # 自动部署配置
 └─ package.json
 ```

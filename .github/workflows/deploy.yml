@@ -39,8 +39,10 @@ jobs:
       - name: 安装依赖
         run: npm ci
 
-      - name: 构建站点
-        run: npm run build
+      - name: 构建站点并自检
+        # verify = build + 链接检查 + 搜索检查 + 暗色模式/更新时间检查
+        # 任何一项不过就中止部署，避免把坏掉的站点发上线
+        run: npm run verify
 
       - name: 上传构建产物
         uses: actions/upload-pages-artifact@v3

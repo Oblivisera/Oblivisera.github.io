@@ -11,7 +11,8 @@
     "new": "node scripts/new-post.mjs",
     "check:links": "node scripts/check-links.mjs",
     "check:search": "node scripts/check-search.mjs",
-    "verify": "npm run build && npm run check:links && npm run check:search"
+    "check:pages": "node scripts/check-pages.mjs",
+    "verify": "npm run build && npm run check:links && npm run check:search && npm run check:pages"
   },
   "devDependencies": {
     "vitepress": "^1.6.4"
