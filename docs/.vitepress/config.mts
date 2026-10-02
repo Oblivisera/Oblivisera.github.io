@@ -78,7 +78,11 @@ export default defineConfig({
   ignoreDeadLinks: [/^https?:\/\/localhost/],
 
   head: [
-    ['link', { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }],
+    // 浏览器标签页图标：ICO 覆盖 16/32/48，PNG 供不认 ICO 的场景，
+    // apple-touch-icon 用于 iOS 添加到主屏幕
+    ['link', { rel: 'icon', href: '/favicon.ico', sizes: '16x16 32x32 48x48' }],
+    ['link', { rel: 'icon', type: 'image/png', href: '/favicon-32.png' }],
+    ['link', { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' }],
     ['meta', { name: 'theme-color', content: '#000000ff' }],
     ['meta', { name: 'author', content: 'Oblivisera' }]
   ],
