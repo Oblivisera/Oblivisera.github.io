@@ -1,7 +1,11 @@
-import { defineConfig } from 'vitepress'
+﻿import { defineConfig } from 'vitepress'
 import { readdirSync, readFileSync, existsSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import footnote from 'markdown-it-footnote'
+import mark from 'markdown-it-mark'
+import taskLists from 'markdown-it-task-lists'
+import { obsidianWikiLink, obsidianComment } from './markdown-plugins.mts'
 
 // ── 文章列表 ─────────────────────────────────────────────────────────
 // 直接扫描 docs/posts 目录生成，侧边栏和「上一篇/下一篇」共用这一份数据。
@@ -55,6 +59,54 @@ function loadPosts(): Post[] {
 
 const posts = loadPosts()
 
+// ── 维基链接解析 ─────────────────────────────────────────────────────
+// Obsidian 按「文件名」或「笔记标题」引用笔记，这里两种都认：
+//   [[hello-world]]     -> 文件名
+//   [[你好，世界]]       -> frontmatter 里的 title
+// 解析不到的链接不会生成 <a>，而是原样保留文字并在构建时告警 ——
+// 宁可显示成 [[xxx]] 让作者发现，也不要生成死链把整个构建搞挂。
+const missingWikiLinks = new Set<string>()
+
+function resolveWikiTarget(
+  target: string,
+  isEmbed: boolean
+): { href: string; isImage: boolean } | null {
+  const clean = target.trim()
+
+  // 图片嵌入：![[picture.png]]，文件放在 docs/public 下
+  if (isEmbed && /\.(png|jpe?g|gif|svg|webp|avif)$/i.test(clean)) {
+    const publicDir = resolve(dirname(fileURLToPath(import.meta.url)), '../public')
+    if (existsSync(resolve(publicDir, clean))) {
+      return { href: `/${clean}`, isImage: true }
+    }
+    missingWikiLinks.add(clean)
+    return null
+  }
+
+  const bySlug = posts.find((p) => p.link.toLowerCase() === `/posts/${clean.toLowerCase()}`)
+  if (bySlug) return { href: bySlug.link, isImage: false }
+
+  const byTitle = posts.find((p) => p.text === clean)
+  if (byTitle) return { href: byTitle.link, isImage: false }
+
+  missingWikiLinks.add(clean)
+  return null
+}
+
+function onMissingWikiTarget(target: string) {
+  missingWikiLinks.add(target)
+}
+
+// 构建结束时统一汇总，避免同一条链接刷屏
+process.on('exit', () => {
+  if (missingWikiLinks.size > 0) {
+    console.warn(
+      `\n[wikilink] 有 ${missingWikiLinks.size} 个维基链接没找到对应文章，已按原样显示：`
+    )
+    for (const t of missingWikiLinks) console.warn(`  [[${t}]]`)
+  }
+})
+
 export default defineConfig({
   // 用户主页仓库发布在根路径，因此 base 保持 '/'
   // 如果以后改成项目仓库（如 github.com/Oblivisera/blog），需改为 '/blog/'
@@ -68,7 +120,35 @@ export default defineConfig({
   markdown: {
     lineNumbers: true,
     // 代码块配色
-    theme: { light: 'github-light', dark: 'github-dark' }
+    theme: { light: 'github-light', dark: 'github-dark' },
+
+    // 数学公式（$...$ 与 $$...$$），用 markdown-it-mathjax3
+    math: true,
+
+    // 这里补上 VitePress 默认没启用的语法，让 Obsidian 写的内容能直接用。
+    // 这个回调在所有内置插件之后执行，所以可以安全地包装原有的 fence 渲染器。
+    config: (md) => {
+      // 脚注 [^1]
+      md.use(footnote)
+      // ==高亮==
+      md.use(mark)
+      // - [ ] 任务列表，变成可点击的复选框
+      md.use(taskLists, { label: true, labelAfter: true })
+      // [[维基链接]] 与 %%注释%%
+      md.use(obsidianWikiLink, resolveWikiTarget, onMissingWikiTarget)
+      md.use(obsidianComment)
+
+      // ```mermaid 代码块 -> <MermaidDiagram /> 组件
+      const defaultFence = md.renderer.rules.fence!
+      md.renderer.rules.fence = (tokens, idx, options, env, self) => {
+        const token = tokens[idx]
+        if (token.info.trim().toLowerCase() === 'mermaid') {
+          // 用 encodeURIComponent 打包源码，避免引号换行破坏属性
+          return `<MermaidDiagram code="${encodeURIComponent(token.content)}" />\n`
+        }
+        return defaultFence(tokens, idx, options, env, self)
+      }
+    }
   },
 
   // 最近更新时间基于 git 提交时间
