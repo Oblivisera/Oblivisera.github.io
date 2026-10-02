@@ -29,7 +29,7 @@ export default defineConfig({
   ],
 
   themeConfig: {
-    logo: '/logo.svg',
+    logo: '/logo.jpg',
 
     // 顶部导航
     nav: [

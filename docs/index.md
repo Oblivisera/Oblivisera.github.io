@@ -6,8 +6,8 @@ hero:
   text: 记录技术、思考与生活
   tagline: 把零散的知识沉淀成可以回看的东西
   image:
-    src: /logo.svg
-    alt: Oblivisera
+    src: /logo.jpg
+    alt: PBLK Puzzle
   actions:
     - theme: brand
       text: 开始阅读
