@@ -3,11 +3,11 @@ layout: home
 
 hero:
   name: Oblivisera
-  text: 记录技术、思考与生活
-  tagline: 把零散的知识沉淀成可以回看的东西
+  text: Hi, Welcome to my Lab!
+  tagline: 待到惊雷破晓时，梨花已然满城飞
   image:
     src: /logo.jpg
-    alt: PBLK Puzzle
+    alt: Oblivisera
   actions:
     - theme: brand
       text: 开始阅读
