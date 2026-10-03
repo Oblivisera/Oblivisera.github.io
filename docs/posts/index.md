@@ -4,11 +4,15 @@
 
 <ul class="post-list">
   <li>
+    <span class="post-date">2026-10-03</span>
+    <a href="./文言实词整理">文言实词整理</a>
+    —— 《诗经·周南》中《关雎》《卷耳》两篇的实词
+  </li>
+  <li>
     <span class="post-date">2026-10-2</span>
     <a href="./hello-world">你好，世界</a>
     —— 仅仅是一个测试
   </li>
-  
 </ul>
 
 

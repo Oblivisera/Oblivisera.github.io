@@ -1,4 +1,4 @@
-﻿import { defineConfig } from 'vitepress'
+import { defineConfig } from 'vitepress'
 import { readdirSync, readFileSync, existsSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -121,6 +121,10 @@ export default defineConfig({
     lineNumbers: true,
     // 代码块配色
     theme: { light: 'github-light', dark: 'github-dark' },
+
+    // Obsidian 默认把单个换行渲染成可见换行，标准 Markdown 则会折叠成空格。
+    // 不开这个开关，从 Obsidian 复制过来的一行行词条会挤成一大段文字。
+    breaks: true,
 
     // 数学公式（$...$ 与 $$...$$），用 markdown-it-mathjax3
     math: true,

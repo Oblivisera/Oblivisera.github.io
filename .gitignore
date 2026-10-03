@@ -17,6 +17,13 @@ yarn-error.log*
 Thumbs.db
 desktop.ini
 
+# Obsidian 仓库配置。
+# 里面是本地编辑器状态（workspace.json 每次开关都会变）和插件的
+# 1MB 编译产物，与博客内容无关，而且它在 docs/ 之外，不会被发布。
+# 如果你希望多台设备通过这个仓库同步 Obsidian 设置，
+# 删掉这一行，并单独忽略 workspace.json 即可。
+.obsidian/
+
 # 环境变量
 .env
 .env.local

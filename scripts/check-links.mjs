@@ -26,8 +26,15 @@ for (const page of pages) {
   ]
   for (const href of refs) {
     if (/^(https?:|mailto:|#|data:)/.test(href)) continue
-    const clean = href.split('#')[0].split('?')[0]
+    let clean = href.split('#')[0].split('?')[0]
     if (!clean) continue
+    // 中文文件名在 HTML 里是百分号编码的（/posts/%E6%96%87...），
+    // 必须先解码才能对到磁盘上的真实文件，否则中文标题的文章会全部误报死链。
+    try {
+      clean = decodeURIComponent(clean)
+    } catch {
+      // 编码不合法就按原样处理
+    }
     checked++
     const target = clean.startsWith('/')
       ? join(dist, clean)
