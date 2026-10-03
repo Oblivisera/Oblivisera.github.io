@@ -8,12 +8,11 @@ import taskLists from 'markdown-it-task-lists'
 import { obsidianWikiLink, obsidianComment } from './markdown-plugins.mts'
 
 // ── 文章列表 ─────────────────────────────────────────────────────────
-// 直接扫描 docs/posts 目录生成，侧边栏和「上一篇/下一篇」共用这一份数据。
-// 这样删掉一篇文章后，侧边栏和翻页会自动跟着消失，
-// 不会留下指向已删除文件的死链（之前踩过这个坑）。
+// 直接扫描 docs/posts 目录生成，侧边栏、归档页、上下篇翻页共用这一份数据。
+// 这样新增或删除文章后三处都会自动跟着变，不会留下指向已删除文件的死链。
 const postsDir = resolve(dirname(fileURLToPath(import.meta.url)), '../posts')
 
-type Post = { text: string; link: string; date: string }
+type Post = { text: string; link: string; date: string; description: string }
 
 function loadPosts(): Post[] {
   if (!existsSync(postsDir)) return []
@@ -44,7 +43,9 @@ function loadPosts(): Post[] {
       return {
         text: title || slug, // 没写 title 就退回文件名
         link: `/posts/${slug}`,
-        date
+        date,
+        // 归档页用它显示一句话摘要（原来这行是手写的）
+        description: pick('description')
       }
     })
     .sort((a, b) => {
