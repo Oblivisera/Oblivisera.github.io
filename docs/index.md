@@ -27,8 +27,6 @@ features:
 
 ## 最近在写
 
-- [你好，世界](./posts/hello-world) —— 测试
-
 
 
 
